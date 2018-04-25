@@ -1,6 +1,10 @@
 FROM        centos
 MAINTAINER        eastgreatwolf <eastgreatwolf@aliyun.com>
     #PHP_HOME
+
+#修改 用户id 和 宿主机用户 id一致
+ENV       NGINX_USER_ID 1000
+
 ENV       PHP_HOME /usr/local/php
 ENV       PHP_VERSION php-7.2.4
 ENV       SRC_DIR /Apps/
@@ -95,14 +99,15 @@ ENV     CONF_ARGS --prefix=${PHP_HOME} \
                   --with-pear \ 
                   --enable-opcache  
     #获取ngxinx rpm
-RUN  rpm -Uvh http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm \
+RUN  useradd nginx -u ${NGINX_USER_ID} \  
+    &&  rpm -Uvh http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm \
     &&  yum install -y nginx \  
-            #安装依赖
+#安装依赖
     &&  yum install -y ${PHP_DEPEND}\
     &&  yum install -y gcc \
     &&  gcc -v\
     &&  yum install -y wget \
-            #获取 并 安装php
+#获取 并 安装php
     &&  wget http://cn2.php.net/get/${PHP_VERSION}.tar.gz/from/this/mirror -O ${PHP_VERSION}.tar.gz \
     &&  tar xzvf ${PHP_VERSION}.tar.gz \
     &&  cd ${PHP_VERSION} \
@@ -113,15 +118,14 @@ RUN  rpm -Uvh http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-cento
     &&  cp ${PHP_HOME}/etc/php-fpm.conf.default ${PHP_HOME}/etc/php-fpm.conf  \      
     &&  cp ${PHP_HOME}/etc/php-fpm.d/www.conf.default ${PHP_HOME}/etc/php-fpm.d/www.conf  \      
     &&  rm -fr ${SRC_DIR}${PHP_VERSION} ${SRC_DIR}${PHP_VERSION}.tar.gz \
-
     &&  cd  /usr/sbin \
     &&  echo '#!/bin/bash'                                     >startNgxPhp.sh \
-    &&  echo "export PATH=.:${PHP_HOME}/bin:${PATH}"          >>startNgxPhp.sh \
+    &&  echo "export PATH=${PHP_HOME}/bin:${PATH}"          >>startNgxPhp.sh \
+    &&  echo "/usr/local/php/sbin/php-fpm"                    >>startNgxPhp.sh \
+    &&  echo "/usr/sbin/nginx -g 'daemon off;'"               >>startNgxPhp.sh \
+    &&  chmod +x startNgxPhp.sh  \
     &&  echo "USER_NAME=\`cat /etc/nginx/nginx.conf |grep ^user|awk '{printf \$2}'\`">>startNgxPhp.sh  \
     &&  echo "chown -R \${USER_NAME}:\${USER_NAME} /Apps"     >>startNgxPhp.sh \
-    &&  echo "/usr/sbin/nginx -g 'daemon off;'"               >>startNgxPhp.sh \
-    &&  echo "/usr/local/php/sbin/php-fpm"                    >>startNgxPhp.sh \
-    &&  chmod +x startNgxPhp.sh  \
     &&  pwd
 
 CMD /usr/sbin/nginx -g 'daemon off;'

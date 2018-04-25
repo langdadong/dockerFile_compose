@@ -1,6 +1,9 @@
 FROM        centos
 MAINTAINER        eastgreatwolf <eastgreatwolf@aliyun.com>
-    #PHP_HOME
+#修改 用户id 和 宿主机用户 id一致
+ENV       NGINX_USER_ID 1000
+
+#PHP_HOME
 #         ENV       PHP_HOME /usr/local/php
 #         ENV       PATH=".:${PHP_HOME}/bin:${PATH}"
 ENV       PHP_VERSION php-7.2.4
@@ -47,11 +50,11 @@ ENV       PHP_DEPEND php70w \
             php70w-xmlrpc 
 
     #获取ngxinx rpm
-RUN  useradd nginx -u 1000 \  
+RUN  useradd nginx -u ${NGINX_USER_ID} \  
     &&  rpm -Uvh http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm \
     &&  yum install -y nginx \  
-            #安装依赖
-            #获取 并 安装php
+#安装依赖
+#获取 并 安装php
     &&  rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm \
     &&  rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm \
     &&  yum install --skip-broken -y ${PHP_DEPEND}\
