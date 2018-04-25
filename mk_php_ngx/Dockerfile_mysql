@@ -1,0 +1,3 @@
+FROM        mysql
+MAINTAINER        eastgreatwolf <eastgreatwolf@aliyun.com>
+RUN         mkdir  /etc/mysql/mysql.conf.d
