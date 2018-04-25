@@ -1,0 +1,5 @@
+while [ 1 ]; do
+	date +"%Y %m %d  %H %M %S"
+    sleep 10 ;
+done
+#ping -i 2 www.baidu.com

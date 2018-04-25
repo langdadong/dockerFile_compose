@@ -1,0 +1,40 @@
+#! /bin/bash
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+export PATH
+
+function ck(){
+   re=`ps -ef|grep ${1}|grep -v grep|wc -l`
+   if [ 0 -eq $re ];then
+        echo _________{${1}:[停了] 
+   elif [ 0 -lt $re ];then
+        echo _________${1}:[运行了] 
+   fi
+}
+
+#echo "$#"; echo "$@"; echo "$*" ;echo "$0";
+
+case $1 in
+
+ r )
+        killall nginx > /dev/null 2>&1
+        /phpstudy/server/nginx/sbin/nginx > /dev/null 2>&1
+        /etc/init.d/php7.0-fpm restart > /dev/null 2>&1
+        ;;
+ s )
+        killall nginx > /dev/null 2>&1
+        /etc/init.d/php7.0-fpm stop > /dev/null 2>&1
+        ;;
+ '' )
+        echo "------------------------"
+        ;;
+  * )
+        echo "------------------------"
+        echo "-------兄弟，这样用-----"
+        echo "------------------------"
+        echo "        ff <s/r>"
+        echo "------------------------"
+        ;;
+esac
+
+ck nginx
+ck php-fpm
