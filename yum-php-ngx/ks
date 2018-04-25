@@ -1,0 +1,1 @@
+docker build -t t p/;docker run -it --name tt -v ~/Apps/confs/nginx/nginx.conf:/etc/nginx/nginx.conf  img-ngx-php /bin/bash

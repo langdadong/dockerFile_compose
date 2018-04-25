@@ -1,0 +1,1 @@
+docker stop tt;docker rm  tt;docker image rm t;docker ps -a|grep -w tt;docker images|grep -w t;
