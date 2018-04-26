@@ -1,0 +1,1 @@
+docker build -t tt .;docker run -it --name tt tt /bin/bash

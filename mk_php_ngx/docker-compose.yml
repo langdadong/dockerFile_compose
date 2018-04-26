@@ -3,12 +3,14 @@ services:
 
    # 定义三个服务nginx,php,mysql
   mysql:
-    image: img-mysql:latest
+    image: mk_mysql_img:latest
     build:
         context: .
         dockerfile: Dockerfile_mysql
+    privileged:
+        true
     ports:
-      - "3306"
+      - "3306:3306"
     volumes:
       - /Apps/confs/sql/my.cnf:/etc/my.cnf
       - /Apps/share_datas/sql:/var/lib/mysql/

@@ -1,3 +1,18 @@
 FROM        mysql
 MAINTAINER        eastgreatwolf <eastgreatwolf@aliyun.com>
 RUN         mkdir  /etc/mysql/mysql.conf.d
+
+
+#--------------------------------------------------------------------------
+#RUN        rpm -Uvh https://dev.mysql.com/get/mysql80-community-release-el7-1.noarch.rpm \
+#        && yum install -y mysql
+#--------------------------------------------------------------------------
+
+#FROM         centos
+#RUN         yum install -y https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-community-server-8.0.11-1.el7.x86_64.rpm
+#rpm -qa |grep mysql
+#rpm -e XXX
+#CMD mysqld
+
+#https://dev.mysql.com/downloads/mysql/
+
